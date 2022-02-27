@@ -24,6 +24,7 @@ library(knitr)
 library(ggplot2)
 library(here)
 library(tinytex)
+library(kableExtra)
 ```
 
 
@@ -97,15 +98,29 @@ geom_point() +
 
 
 
-# 3. Table
+# 3. Table----Macro table
 ```{r tab, fig.cap="", echo=FALSE}
 
-table_data <- group_by(clean_data, population_group)
-summarise(table_data, percentage_of_under_16 = mean(percentage_of_under_16), percentage_moved_to_housing = mean(percentage_moved_to_housing) ) %>% mutate_if(is.numeric, round, digits = 1) -> table_data2
-knitr::kable(table_data2, 
-             caption = "Percentages in Mean",
-             col.names = c("Group", "Percentage with minor", "percentage moved to housing"),
-             align = c("c", "c", "c")) %>% kable_styling(latex_options = "HOLD_position")
+Macro_table_data <- group_by(Macro_data, female)
+summarise(Macro_table_data, Micro_grade = mean(micro_grade), relative_grade = mean(micro_relative_grade) ) %>% mutate_if(is.numeric, round, digits = 2) -> Macro_table_data2
+knitr::kable(Macro_table_data2, 
+             caption = "Mean",
+             col.names = c("Gender", "Mean grade", "Mean Relative Grade"),
+             align = c("c", "c", "c")) %>% kable_styling(latex_options = "HOLD_position")%>%
+add_footnote("0 = Male, 1 = Female", notation="symbol")
+
+```
+
+# 3. Table----Int Micro table
+```{r tab, fig.cap="", echo=FALSE}
+
+Int_micro_table_data <- group_by(Int_micro_data, female)
+summarise(Int_micro_table_data, Macro_grade = mean(macro_grade), relative_grade = mean(macro_relative_grade) ) %>% mutate_if(is.numeric, round, digits = 2) -> Int_micro_table_data2
+knitr::kable(Int_micro_table_data2, 
+             caption = "Mean",
+             col.names = c("Gender", "Mean grade", "Mean Relative Grade"),
+             align = c("c", "c", "c")) %>% kable_styling(latex_options = "HOLD_position")%>%
+add_footnote("0 = Male, 1 = Female", notation="symbol")
 
 ```
 
