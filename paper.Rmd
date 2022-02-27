@@ -1,0 +1,111 @@
+---
+title: "My title"
+subtitle: "My subtitle if needed"
+author: 
+  - First author
+  - Another author
+thanks: "Code and data are available at: LINK."
+date: "`r format(Sys.time(), '%d %B %Y')`"
+abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+output:
+  bookdown::pdf_document2
+toc: FALSE
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(haven)
+library(dplyr)
+library(readr)
+library(knitr)
+library(ggplot2)
+library(here)
+library(tinytex)
+```
+
+
+
+# Data------------Macro_data
+```{r, include=FALSE}
+#load  data
+Macro_data
+```
+
+# Graph------------Macro_data graph 1.female
+```{r grade, fig.cap="female: Micro grade vs Mean nomicro gpa", fig.weight=3.3, fig.Weight=2.5, echo=FALSE, warning=FALSE, message=FALSE}
+female_macro <- filter(Macro_data,female == "1")
+
+ggplot(female_macro, aes(x = mean_gpa_nomicro, y = micro_grade , color = macro_econ == 1)) +
+geom_point() +
+  labs(color = "macro_econ",
+       x = "Mean Gpa",
+       y = "Macro grade",
+       title = "Micro grade vs Mean nomicro gpa--Feale")+
+  geom_abline(intercept =-0.4 , slope = 1.1)
+```
+# Graph------------Macro_data graph 1.male
+```{r grade, fig.cap="male: Micro grade vs Mean nomicro gpa", fig.height=3.3, fig.height=2.5, echo=FALSE, warning=FALSE, message=FALSE}
+male_macro <- filter(Macro_data,female == "0")
+
+ggplot(male_macro, aes(x = mean_gpa_nomicro, y = micro_grade , color = macro_econ == 1)) +
+geom_point() +
+  labs(color = "macro_econ",
+       x = "Mean Gpa",
+       y = "Macro grade",
+       title = "Micro grade vs Mean nomicro gpa--Male")+
+  geom_abline(intercept =0 , slope = 1)
+       
+```
+
+
+# Data------------Int_micro_data
+```{r, include=FALSE}
+#load  data
+Int_micro_data
+```
+
+
+# Graph------------Int_micro_data graph 1.female
+```{r grade, fig.cap="female: Macro grade vs Mean nomacro gpa", fig.height=3.3, fig.height=2.5, echo=FALSE, warning=FALSE, message=FALSE}
+female_Int_micro_data <- filter(Int_micro_data,female == "1")
+
+ggplot(female_Int_micro_data, aes(x = mean_gpa_nomacro, y = macro_grade , color = int_micro == 1)) +
+geom_point() +
+  labs(color = "int_micro",
+       x = "Mean Gpa",
+       y = "Macro grade",
+       title = "Macro grade vs Mean nomacro gpa--Female")+
+  geom_abline(intercept =-1 , slope = 1.25)
+
+```
+
+# Graph------------Int_micro_data graph 2.Male
+```{r grade, fig.cap="Male: Macro grade vs Mean nomacro gpa", fig.height=3.3, fig.height=2.5, echo=FALSE, warning=FALSE, message=FALSE}
+male_Int_micro_data <- filter(Int_micro_data,female == "0")
+
+ggplot(male_Int_micro_data, aes(x = mean_gpa_no_macro, y = macro_grade , color = int_micro == 1)) +
+geom_point() +
+  labs(color = "int_micro",
+       x = "Mean Gpa",
+       y = "Macro grade",
+       title = "Macro grade vs Mean nomacro gpa--Male") + geom_abline(intercept =-0.4 , slope = 1.1)
+
+```
+
+
+
+# 3. Table
+```{r tab, fig.cap="", echo=FALSE}
+
+table_data <- group_by(clean_data, population_group)
+summarise(table_data, percentage_of_under_16 = mean(percentage_of_under_16), percentage_moved_to_housing = mean(percentage_moved_to_housing) ) %>% mutate_if(is.numeric, round, digits = 1) -> table_data2
+knitr::kable(table_data2, 
+             caption = "Percentages in Mean",
+             col.names = c("Group", "Percentage with minor", "percentage moved to housing"),
+             align = c("c", "c", "c")) %>% kable_styling(latex_options = "HOLD_position")
+
+```
+
